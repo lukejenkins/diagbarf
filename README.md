@@ -1,5 +1,7 @@
 # diagbarf
 
+> Part of the **[cellular `diag*` toolkit](https://github.com/lukejenkins/cellular#the-diag-toolkit)** — start there for how the capture/decode pieces fit together.
+
 **An on-device Qualcomm DIAG egress daemon.** `diagbarf` gets the raw cellular
 diagnostic firehose *off* your modem and onto the network. It runs on the modem's
 own application processor, arms the global DIAG log mask itself, and fans the
