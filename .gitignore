@@ -9,6 +9,8 @@
 /diagbarf-x86_64
 # host: static aarch64 jump box
 /diagbarf-aarch64
+# RIS-9260 RSU: static i686
+/diagbarf-i686
 
 # ── C build intermediates ────────────────────────────────────────────────────
 *.o

@@ -1,6 +1,6 @@
 #!/bin/sh
 # SPDX-License-Identifier: Apache-2.0
-# diagbarf.sh — launcher for the DIAG egress daemon (#N).
+# diagbarf.sh — launcher for the DIAG egress daemon.
 #
 # Sources /data/diagbarf/diagbarf.conf (shell KEY=VALUE, like at_tcp.sh) and
 # exec's the static C daemon with derived flags. Launch flags override config;
@@ -40,13 +40,16 @@ fi
 # Knobs
 [ -n "$DIAG_MASK" ]          && set -- "$@" --mask "$DIAG_MASK"
 [ "${DIAG_EXT_MSG_F3:-0}" = "1" ] && set -- "$@" --ext-msg-f3
+[ "${DIAG_QSH_TRACE:-0}" = "1" ] && set -- "$@" --qsh-trace
 [ -n "$DIAG_INTERNAL_PORT" ] && set -- "$@" --internal-port "$DIAG_INTERNAL_PORT"
 [ -n "$DIAG_RETRY" ]         && set -- "$@" --retry "$DIAG_RETRY"
 [ -n "$DIAG_SOCKET_LOG" ]    && set -- "$@" --diag-socket-log "$DIAG_SOCKET_LOG"
+# Opt-in DIAG command passthrough. A bare PORT binds 127.0.0.1.
+[ -n "$DIAG_CMD_LISTEN" ]    && set -- "$@" --cmd-listen "$DIAG_CMD_LISTEN"
 
 # DIAG source: socket-log (default, captive OEM diag_socket_log), diag-dev
 # (native kernel /dev/diag, zero-dependency — SDX55 M2000, no diag_socket_log), or
-# hdlc-chardev (host-side jump box: serial-like CRC-HDLC DIAG chardev, #N).
+# hdlc-chardev (host-side jump box: serial-like CRC-HDLC DIAG chardev).
 [ -n "$DIAG_SOURCE" ]        && set -- "$@" --source "$DIAG_SOURCE"
 [ -n "$DIAG_DEV" ]           && set -- "$@" --diag-dev "$DIAG_DEV"
 

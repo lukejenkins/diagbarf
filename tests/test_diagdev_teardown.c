@@ -1,8 +1,8 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* Host regression test for the diag-dev bridge SIGTERM-teardown wedge (#N).
+/* Host regression test for the diag-dev bridge SIGTERM-teardown wedge.
  * Build+run: make -C apps/diagbarf test   (or: make -C apps/diagbarf test-bridge)
  *
- * The bug (build 475bbfc94-dirty, <redacted-ref>): the diag-dev bridge thread
+ * The bug (build 475bbfc94-dirty): the diag-dev bridge thread
  * blocked in a bare read() on /dev/diag with no wakeup path, so a SIGTERM-set
  * g_stop was never observed and the main thread's pthread_join() hung forever
  * (required kill -9, which risks leaving /dev/diag in MEMORY_DEVICE mode).
@@ -35,7 +35,7 @@
 static void on_alarm(int s) {
     (void)s;
     static const char m[] =
-        "TIMEOUT: diagdev_bridge wedged — SIGTERM teardown regression (#N)\n";
+        "TIMEOUT: diagdev_bridge wedged — SIGTERM teardown regression\n";
     (void)!write(2, m, sizeof m - 1);
     _exit(1);
 }

@@ -1,0 +1,204 @@
+{
+ "description": "Shared DIAG peek-filter vectors (Python framefilter and its C twin). 'escaped' is one frame WITHOUT 0x7E delimiters. 'peek' is the expected classification (null = too short). 'matches' = filter.matches(peek); 'yields' = a Match is produced (matches AND CRC-16/X.25 valid).",
+ "filter": {
+  "log_codes": [
+   5238,
+   5246,
+   32126
+  ],
+  "f3": true,
+  "events": true
+ },
+ "vectors": [
+  {
+   "name": "bare_log_wanted",
+   "escaped": "100018001800761411111111111111110000000000000000000000001aa1",
+   "peek": {
+    "opcode": 16,
+    "inner_opcode": null,
+    "log_code": 5238
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "bare_log_unwanted",
+   "escaped": "100018001800c0b01111111111111111000000000000000000000000337d5d",
+   "peek": {
+    "opcode": 16,
+    "inner_opcode": null,
+    "log_code": 45248
+   },
+   "matches": false,
+   "yields": false
+  },
+  {
+   "name": "wrapped_log_wanted",
+   "escaped": "98010000010000001000180018007614111111111111111100000000000000000000000016d2",
+   "peek": {
+    "opcode": 152,
+    "inner_opcode": 16,
+    "log_code": 5238
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "wrapped_log_unwanted",
+   "escaped": "980100000100000010001800180093b111111111111111110000000000000000000000000402",
+   "peek": {
+    "opcode": 152,
+    "inner_opcode": 16,
+    "log_code": 45459
+   },
+   "matches": false,
+   "yields": false
+  },
+  {
+   "name": "ext_msg_0x79",
+   "escaped": "7900000022222222222222222222222222222222222222225711",
+   "peek": {
+    "opcode": 121,
+    "inner_opcode": null,
+    "log_code": null
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "qsr4_terse_0x99",
+   "escaped": "990011003333333333333333333333333333333333333333f918",
+   "peek": {
+    "opcode": 153,
+    "inner_opcode": null,
+    "log_code": null
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "qsr_legacy_0x92",
+   "escaped": "92444444444444444444444444444444444444444400c7",
+   "peek": {
+    "opcode": 146,
+    "inner_opcode": null,
+    "log_code": null
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "wrapped_0x99",
+   "escaped": "980100000100000099001100333333333333333333333333333333333333333345ff",
+   "peek": {
+    "opcode": 152,
+    "inner_opcode": 153,
+    "log_code": null
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "event_0x60",
+   "escaped": "600a00555555555555555555551ce0",
+   "peek": {
+    "opcode": 96,
+    "inner_opcode": null,
+    "log_code": null
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "wrapped_event_0x60",
+   "escaped": "9801000001000000600a00555555555555555555559436",
+   "peek": {
+    "opcode": 152,
+    "inner_opcode": 96,
+    "log_code": null
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "qsh_0x9d_unwanted",
+   "escaped": "9d66666666666666666666666666666666666666663412",
+   "peek": {
+    "opcode": 157,
+    "inner_opcode": null,
+    "log_code": null
+   },
+   "matches": false,
+   "yields": false
+  },
+  {
+   "name": "log_code_escaped_low_byte",
+   "escaped": "1000180018007d5e141111111111111111000000000000000000000000a7c3",
+   "peek": {
+    "opcode": 16,
+    "inner_opcode": null,
+    "log_code": 5246
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "log_code_and_len_escaped",
+   "escaped": "10007d5d7d5e7d5d7d5e7d5e7d5d11111111111111117d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e7d5e8ccf",
+   "peek": {
+    "opcode": 16,
+    "inner_opcode": null,
+    "log_code": 32126
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "wrapped_escape_dense_head",
+   "escaped": "987d5e7d5d7d5e7d5d7d5e7d5d7d5e10007d5d7d5d7d5d7d5d7d5e1411111111111111117d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5d7d5dca72",
+   "peek": {
+    "opcode": 152,
+    "inner_opcode": 16,
+    "log_code": 5246
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "escaped_7d_then_literal_5e",
+   "escaped": "10001c001c00761411111111111111117d5d5e7d5d5e7d5d5e7d5d5e7d5d5e7d5d5e7d5d5e7d5d5ed481",
+   "peek": {
+    "opcode": 16,
+    "inner_opcode": null,
+    "log_code": 5238
+   },
+   "matches": true,
+   "yields": true
+  },
+  {
+   "name": "bad_crc_wanted",
+   "escaped": "10001800180076141111111111111111000000000000000000000000e55e",
+   "peek": {
+    "opcode": 16,
+    "inner_opcode": null,
+    "log_code": 5238
+   },
+   "matches": true,
+   "yields": false
+  },
+  {
+   "name": "truncated_log",
+   "escaped": "1000050005",
+   "peek": null,
+   "matches": false,
+   "yields": false
+  },
+  {
+   "name": "truncated_wrapper",
+   "escaped": "98010000",
+   "peek": null,
+   "matches": false,
+   "yields": false
+  }
+ ]
+}

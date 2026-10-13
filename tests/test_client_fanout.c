@@ -1,9 +1,8 @@
 /* SPDX-License-Identifier: Apache-2.0 */
-/* Host regression test for the TCP-listen client-fanout bookkeeping (#N).
+/* Host regression test for the TCP-listen client-fanout bookkeeping.
  * Build+run: make -C apps/diagbarf test  (or: make -C apps/diagbarf test-fanout)
  *
- * The bug (build 406bd93e5, <redacted-ref>, first hit on the live-USB run in this
- * issue): the fan-out loop kept a parallel `client_idx[]` array mapping each
+ * The bug (build 406bd93e5, first hit on a live-USB run): the fan-out loop kept a parallel `client_idx[]` array mapping each
  * client to its pollfd slot, populated only for the clients present when pfds
  * was built. accept() then grew `nclients` for a newly connected client BEFORE
  * the drain loop, so the drain loop read `client_idx[<new>]` — an UNINITIALIZED
@@ -37,26 +36,26 @@ static void test_compact_basic(void)
 
     /* no holes */
     c[0] = 10; c[1] = 11; c[2] = 12;
-    assert(compact_clients(c, 3) == 3);
+    assert(compact_clients(c, NULL, 3) == 3);
     assert(c[0] == 10 && c[1] == 11 && c[2] == 12);
 
     /* hole in the middle -> survivors keep order, tail cleared */
     c[0] = 10; c[1] = -1; c[2] = 12;
-    assert(compact_clients(c, 3) == 2);
+    assert(compact_clients(c, NULL, 3) == 2);
     assert(c[0] == 10 && c[1] == 12 && c[2] == -1);
 
     /* first slot closed */
     c[0] = -1; c[1] = 11; c[2] = 12; c[3] = -1;
-    assert(compact_clients(c, 4) == 2);
+    assert(compact_clients(c, NULL, 4) == 2);
     assert(c[0] == 11 && c[1] == 12 && c[2] == -1 && c[3] == -1);
 
     /* all closed */
     c[0] = -1; c[1] = -1;
-    assert(compact_clients(c, 2) == 0);
+    assert(compact_clients(c, NULL, 2) == 0);
     assert(c[0] == -1 && c[1] == -1);
 
     /* empty */
-    assert(compact_clients(c, 0) == 0);
+    assert(compact_clients(c, NULL, 0) == 0);
     printf("ok compact_basic\n");
 }
 
@@ -85,7 +84,7 @@ static void test_drain_then_accept_discipline(void)
         int slot = idx_first_client + i;
         assert(slot >= idx_first_client && slot < np);  /* always in range */
     }
-    nclients = compact_clients(clients, nclients);
+    nclients = compact_clients(clients, NULL, nclients);
     assert(nclients == 0);
 
     /* accept the new client AFTER draining. */
@@ -101,7 +100,7 @@ static void test_drain_then_accept_discipline(void)
 
     /* pretend client 100 had no POLLIN (revents 0) -> not drained, survives. */
     /* pretend nothing to drain; compact is a no-op. */
-    nclients = compact_clients(clients, nclients);
+    nclients = compact_clients(clients, NULL, nclients);
     assert(nclients == 1 && clients[0] == 100);
 
     clients[nclients++] = 101;        /* second client accepted */
@@ -120,7 +119,7 @@ static void test_drain_then_accept_discipline(void)
     assert(slot < np);
     clients[drain_i] = -1;            /* tombstone (what close-path does) */
 
-    nclients = compact_clients(clients, nclients);
+    nclients = compact_clients(clients, NULL, nclients);
     assert(nclients == 1 && clients[0] == 101 && clients[1] == -1);
 
     printf("ok drain_then_accept_discipline\n");
